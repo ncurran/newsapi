@@ -17,15 +17,22 @@ class Py3status:
         response = requests.get('https://newsapi.org/v1/articles', params=params)
         parsed = json.loads(response.text)
         #
-        article =  int(time.time()/30)%len(parsed['articles'])
-        title = parsed['articles'][article]['title']+'. '
-        #title = parsed['articles'][0]['title']+'. '
-        i = int(time.time())%len(title)
-        return {'full_text': source+': '+title[i:]+title[:i], 'cached_until': 1}
-        return {
-            'full_text': result,
-            'cached_until': .5
-        }
+        titles = ''
+        for article in parsed['articles']:
+            titles += article['title']+'. '
+        i = int(time.time()*10)%len(titles)
+        titles = titles[i:]+titles[:i]
+        titles = titles[:35]
+        return {'full_text': source+': '+titles, 'cached_until': .1}
+        #article =  int(time.time()/30)%len(parsed['articles'])
+        #title = parsed['articles'][article]['title']+'. '
+        ##title = parsed['articles'][0]['title']+'. '
+        #i = int(time.time())%len(title)
+        #return {'full_text': source+': '+title[i:]+title[:i], 'cached_until': 1}
+        #return {
+        #    'full_text': result,
+        #    'cached_until': .5
+        #}
 
 if __name__ == "__main__":
     """
