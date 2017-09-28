@@ -10,30 +10,29 @@ import requests
 import time
 
 class Py3status:
-    def newsapi(self):
-        api_key = 'fe99f0fd7ee74c3887cdcb0fef3ede0a'
-        source = 'techcrunch'
-        params = {'source':source, 'apiKey':api_key}
+    #cache_timeout = 1 
+    api_key = 'fe99f0fd7ee74c3887cdcb0fef3ede0a'
+    sources = ['techcrunch', 'hacker-news', 'recode']
+    source_switch_interval = 30
+    scroll_multiplier = 10
+
+    def _get_news(self):
+        source = self.sources[int(time.time()/self.source_switch_interval)%len(self.sources)]
+        params = {'source':source, 'apiKey':self.api_key}
         response = requests.get('https://newsapi.org/v1/articles', params=params)
         parsed = json.loads(response.text)
-        #
+        return source, parsed
+
+    def newsapi(self):
+        source, parsed = self._get_news()
         titles = ''
         for article in parsed['articles']:
-            titles += article['title']+'. '
-        i = int(time.time()*10)%len(titles)
+            titles += article['title']+'/ ' #too much trouble to use a period here as somtimes titles end in quoteds, i.e. doing +'. ' would leave a title ending '"<something>".' and that would not do.
+        i = int(time.time()*self.scroll_multiplier)%len(titles)
         titles = titles[i:]+titles[:i]
         titles = titles[:35]
-        return {'full_text': source+': '+titles, 'cached_until': .1}
-        #article =  int(time.time()/30)%len(parsed['articles'])
-        #title = parsed['articles'][article]['title']+'. '
-        ##title = parsed['articles'][0]['title']+'. '
-        #i = int(time.time())%len(title)
-        #return {'full_text': source+': '+title[i:]+title[:i], 'cached_until': 1}
-        #return {
-        #    'full_text': result,
-        #    'cached_until': .5
-        #}
-
+        #return {'full_text': source+': '+titles, 'cached_until': self.py3.time_in(self.cache_timeout)}
+        return {'full_text': source+': '+titles, 'cached_until':3}
 if __name__ == "__main__":
     """
     Run module in test mode.
