@@ -11,7 +11,7 @@ import time
 
 class Py3status:
     #cache_timeout = 1 
-    api_key = 'fe99f0fd7ee74c3887cdcb0fef3ede0a'
+    api_key = '<key>'
     sources = ['techcrunch', 'hacker-news', 'recode']
     source_switch_interval = 30
     scroll_multiplier = 10
