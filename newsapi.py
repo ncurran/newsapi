@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Example module that says 'Hello World!'
+Module that displays news items from newsapi
 
-This demonstrates how to produce a simple custom module.
+This makes too many requests.
 """
 
 import json
